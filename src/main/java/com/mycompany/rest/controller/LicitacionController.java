@@ -1,6 +1,6 @@
 package com.mycompany.rest.controller;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycompany.rest.dao.LicitacionDAO;
 import com.mycompany.rest.domain.Licitacion;
 
-
 /**
  * REST service provider
  * 
@@ -27,12 +26,14 @@ public class LicitacionController {
 
 	@Autowired
 	LicitacionDAO licitacionDao;
-	
-	@RequestMapping(value = "/licitaciones/{codCat}", method = RequestMethod.GET, produces="application/json")
-	public @ResponseBody List<Licitacion> obtenerListaLicitaciones(@PathVariable("codCat") int codCat) {		
+
+	@RequestMapping(value = "/licitaciones/{codCat}/{flgAboCli}", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody List<Licitacion> obtenerListaLicitaciones(
+			@PathVariable("codCat") int codCat,
+			@PathVariable("flgAboCli") int flgAboCli) {
 		System.out.println("ENTRA  OBTENER LICITACIONES");
-		return licitacionDao.obtenerLicitaciones(codCat);
+		List<Licitacion> lstLicitacion = licitacionDao.obtenerLicitaciones(
+				codCat, flgAboCli);
+		return lstLicitacion;
 	}
-	
-	
 }

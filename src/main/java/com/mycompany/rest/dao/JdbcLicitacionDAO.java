@@ -17,10 +17,13 @@ public class JdbcLicitacionDAO implements LicitacionDAO {
 		this.dataSource = dataSource;
 	}
 
-	public List<Licitacion> obtenerLicitaciones(int codCat) {
+	public List<Licitacion> obtenerLicitaciones(int codCat, int flgAboCli) {
 		String sql = "SELECT lic.codLic, lic.nomLic, lic.desLic, lic.norAplLic, lic.valRef,DATE_FORMAT(lic.fecPubLic,'%m-%d-%Y %h:%i %p') as fecPubLic, DATE_FORMAT(lic.fecterLic, '%m-%d-%Y') as fecterLic,lic.monLic, lic.verSeaLic,lic.estLic, ec.rucEnt, ec.desEnt, ec.dirEnt, cat.desCat, lic.codEnt, lic.codCat"
 				+ " from licitacion lic INNER JOIN entidad_convocante ec ON lic.codEnt=ec.codEnt INNER JOIN categoria cat ON lic.codCat=cat.codCat WHERE lic.codCat=? AND lic.estLic=1";
 
+		if (flgAboCli != 1) {
+			sql += " AND lic.valRef<=20000";
+		}
 		Connection conn = null;
 
 		try {
