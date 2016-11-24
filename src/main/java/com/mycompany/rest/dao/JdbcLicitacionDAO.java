@@ -18,7 +18,8 @@ public class JdbcLicitacionDAO implements LicitacionDAO {
 	}
 
 	public List<Licitacion> obtenerLicitaciones(int codCat) {
-		String sql = "SELECT lic.*, ec.rucEnt, ec.desEnt, ec.dirEnt, cat.desCat from licitacion lic INNER JOIN entidad_convocante ec ON lic.codEnt=ec.codEnt INNER JOIN categoria cat ON lic.codCat=cat.codCat WHERE lic.codCat=? AND lic.estLic=1";
+		String sql = "SELECT lic.codLic, lic.nomLic, lic.desLic, lic.norAplLic, lic.valRef,DATE_FORMAT(lic.fecPubLic,'%m-%d-%Y %h:%i %p') as fecPubLic, DATE_FORMAT(lic.fecterLic, '%m-%d-%Y') as fecterLic,lic.monLic, lic.verSeaLic,lic.estLic, ec.rucEnt, ec.desEnt, ec.dirEnt, cat.desCat, lic.codEnt, lic.codCat"
+				+ " from licitacion lic INNER JOIN entidad_convocante ec ON lic.codEnt=ec.codEnt INNER JOIN categoria cat ON lic.codCat=cat.codCat WHERE lic.codCat=? AND lic.estLic=1";
 
 		Connection conn = null;
 

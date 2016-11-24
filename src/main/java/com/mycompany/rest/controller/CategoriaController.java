@@ -25,7 +25,7 @@ public class CategoriaController {
 	
 	
 	@RequestMapping(value = "/categorias", method = RequestMethod.GET, produces="application/json")
-	public @ResponseBody List<Categoria> getCategorias() {		
+	public @ResponseBody List<Categoria> obtenerListaCategorias() {		
 		return categoriaDao.listarCategorias();
 	}
 	

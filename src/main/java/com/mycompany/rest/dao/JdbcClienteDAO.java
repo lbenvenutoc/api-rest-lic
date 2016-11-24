@@ -43,11 +43,11 @@ public class JdbcClienteDAO implements ClienteDAO {
 				ps.setString(7, "");
 			}
 			ps.setInt(8, cliente.getFlgAboCli());
-			ps.setInt(9, 1);			
-			ps.executeUpdate();				
-			ResultSet keys = ps.getGeneratedKeys();    
-			keys.next();  
-			int key = keys.getInt(1);			
+			ps.setInt(9, 1);
+			ps.executeUpdate();
+			ResultSet keys = ps.getGeneratedKeys();
+			keys.next();
+			int key = keys.getInt(1);
 			if (key != 0) {
 				cliente.setCodCli(key);
 				categoriaDao.insertarSuscription(cliente);
@@ -96,6 +96,35 @@ public class JdbcClienteDAO implements ClienteDAO {
 			rs.close();
 			ps.close();
 			return cliente;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	public int existeCliente(Cliente cliente) {
+		String sql = "SELECT count(c.codCli) as tiene FROM cliente c  WHERE c.rucCli = ? AND c.estCli=1";
+		Connection conn = null;
+		int resultado = 0;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, cliente.getRucCli());
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				resultado = rs.getInt("tiene");
+			}
+			rs.close();
+			ps.close();
+			return resultado;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {

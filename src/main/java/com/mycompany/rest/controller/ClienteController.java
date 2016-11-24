@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycompany.rest.dao.ClienteDAO;
 import com.mycompany.rest.domain.Cliente;
 
-
-
 /**
  * REST service provider
  * 
@@ -24,33 +22,36 @@ public class ClienteController {
 
 	protected static Logger logger = Logger.getLogger("controller");
 
-	
 	@Autowired
 	ClienteDAO clienteDao;
-	
-	
-	@RequestMapping(value = "/clientes/{ruc}/{claUsu}", method = RequestMethod.GET, produces="application/json")
-	public @ResponseBody Cliente getCliente(@PathVariable("ruc") String ruc, @PathVariable("claUsu") String claUsu) {
+
+	@RequestMapping(value = "/clientes/{ruc}/{claUsu}", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Cliente obtenerUsuario(@PathVariable("ruc") String ruc,
+			@PathVariable("claUsu") String claUsu) {
 		System.out.println("ENTRA  OBTENER CLIENTES");
-		Cliente cliente=null;
-		cliente=clienteDao.obtenerCliente(ruc, claUsu);		
+		Cliente cliente = null;
+		cliente = clienteDao.obtenerCliente(ruc, claUsu);
+		if (cliente == null) {
+			cliente = new Cliente();
+			cliente.setCodCli(-1);
+		}
 		return cliente;
 	}
+
 	
-	/*
-	@RequestMapping(value = "/clientes", method = RequestMethod.GET, produces="application/json")
-	public @ResponseBody List<Cliente> getClientes() {
-		
-		return clienteService.getClientes();
+
+	@RequestMapping(value = "/clientes/nuevo", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody Cliente crearUsuario(@RequestBody Cliente cliente) {
+		int resultado = clienteDao.existeCliente(cliente);
+		Cliente clienteResultado = null;
+		if (resultado == 1) {
+			clienteResultado = new Cliente();
+			clienteResultado.setCodCli(-2);
+			clienteResultado.setRucCli(cliente.getRucCli());
+		} else {
+			clienteResultado = clienteDao.insertarCliente(cliente);
+		}
+		return clienteResultado;
 	}
-	
-	
-	*/
-	
-	@RequestMapping(value = "/clientes/nuevo", method = RequestMethod.POST, produces="application/json", consumes="application/json")
-	public @ResponseBody Cliente insertarCliente(@RequestBody Cliente cliente) {	
-		return clienteDao.insertarCliente(cliente);		
-	}
-	
-	
+
 }

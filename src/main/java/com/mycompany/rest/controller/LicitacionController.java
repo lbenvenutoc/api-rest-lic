@@ -29,7 +29,7 @@ public class LicitacionController {
 	LicitacionDAO licitacionDao;
 	
 	@RequestMapping(value = "/licitaciones/{codCat}", method = RequestMethod.GET, produces="application/json")
-	public @ResponseBody List<Licitacion> getLicitaciones(@PathVariable("codCat") int codCat) {		
+	public @ResponseBody List<Licitacion> obtenerListaLicitaciones(@PathVariable("codCat") int codCat) {		
 		System.out.println("ENTRA  OBTENER LICITACIONES");
 		return licitacionDao.obtenerLicitaciones(codCat);
 	}
