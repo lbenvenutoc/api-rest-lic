@@ -6,7 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.sql.DataSource;
+
+import com.mycompany.rest.domain.Cliente;
 import com.mycompany.rest.domain.Licitacion;
 
 public class JdbcLicitacionDAO implements LicitacionDAO {
@@ -66,6 +69,33 @@ public class JdbcLicitacionDAO implements LicitacionDAO {
 				}
 			}
 
+		}
+	}
+
+	public int obtenerNumeroLictacionesPorVencer(int codCat) {
+		String sql = "SELECT count(*) as numero FROM licitacion l where DATEDIFF(l.fecTerLic,CURDATE())<7 AND l.estLic=1 AND l.codCat=?";
+		Connection conn = null;
+		int resultado = 0;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, codCat);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				resultado = rs.getInt("numero");
+			}
+			rs.close();
+			ps.close();
+			return resultado;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycompany.rest.dao.LicitacionDAO;
 import com.mycompany.rest.domain.Licitacion;
+import com.mycompany.rest.domain.Notificacion;
 
 /**
  * REST service provider
@@ -35,5 +36,18 @@ public class LicitacionController {
 		List<Licitacion> lstLicitacion = licitacionDao.obtenerLicitaciones(
 				codCat, flgAboCli);
 		return lstLicitacion;
+	}
+	
+	@RequestMapping(value = "/licitaciones/porvencer/{codCat}", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Notificacion obtenerNumeroLictacionesPorVencer(
+			@PathVariable("codCat") int codCat) {
+		
+		Notificacion notificacion = new Notificacion();
+		int numeroNorificacionesPorVencer = licitacionDao
+				.obtenerNumeroLictacionesPorVencer(codCat);
+		System.out.println("ENTRA  OBTENER obtenerNumeroLictacionesPorVencer "+numeroNorificacionesPorVencer);
+		notificacion
+				.setNumeroNorificacionesPorVencer(numeroNorificacionesPorVencer);
+		return notificacion;
 	}
 }
